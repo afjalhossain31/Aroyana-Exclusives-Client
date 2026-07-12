@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer"; // Footer Import করা হলো
 
-// আমরা প্রফেশনাল লুকের জন্য Inter ফন্ট ব্যবহার করছি
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,11 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
         <Navbar />
-        <main className="min-h-screen">
+        {/* flex-grow নিশ্চিত করবে যে পেজে কন্টেন্ট কম থাকলেও ফুটার নিচে থাকবে */}
+        <main className="flex-grow">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );
