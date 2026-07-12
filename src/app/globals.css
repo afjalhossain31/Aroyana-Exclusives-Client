@@ -1,5 +1,11 @@
 @import "tailwindcss";
 @import "@heroui/styles"; 
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-
+body {
+  background-color: #F8FAFC; /* neutralBg */
+  color: #0F172A; /* primary text color */
+}
