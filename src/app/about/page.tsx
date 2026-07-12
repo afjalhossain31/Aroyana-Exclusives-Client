@@ -6,8 +6,9 @@ export default function AboutPage() {
       
       {/* ১. Minimal & Luxurious Hero Section */}
       <div className="relative h-[45vh] bg-gray-50 flex items-center justify-center border-b border-gray-100 overflow-hidden">
+        {/* Local Image Path used here */}
         <img
-          src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e07?q=80&w=2070"
+          src="/about-hero.jpg"
           alt="Aroyana Fashion Studio"
           className="absolute inset-0 w-full h-full object-cover opacity-10 filter grayscale contrast-125"
         />
@@ -63,8 +64,9 @@ export default function AboutPage() {
           <div className="lg:col-span-5 relative">
             <div className="absolute inset-0 bg-gray-100 rounded-3xl translate-x-4 translate-y-4 -z-10 border border-gray-200" />
             <div className="relative h-[550px] rounded-2xl overflow-hidden shadow-xl border border-gray-100">
+              {/* Local Image Path used here */}
               <img
-                src="https://images.unsplash.com/photo-1550639524-a6f58345a278?q=80&w=1000"
+                src="/vision.jpg"
                 alt="Fashion Design Process"
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
               />

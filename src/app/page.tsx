@@ -6,13 +6,10 @@ export default async function HomePage() {
   let items = [];
   
   try {
-    // ব্যাকএন্ড থেকে ডাটা নিয়ে আসা হচ্ছে
     const res = await fetch('http://127.0.0.1:5000/api/items', { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
-      // যদি ব্যাকএন্ড সরাসরি অ্যারে পাঠায় অথবা অবজেক্টের ভেতর items পাঠায়
       const allItems = Array.isArray(data) ? data : data.items || [];
-      // শুধুমাত্র প্রথম ৪টি প্রোডাক্ট দেখানো হচ্ছে (Desktop view: 4 cards per row)
       items = allItems.slice(0, 4);
     }
   } catch (error) {
@@ -22,10 +19,47 @@ export default async function HomePage() {
   return (
     <div className="bg-white min-h-screen text-gray-900">
       
-      {/* ১. স্লাইডারসহ প্রিমিয়াম Hero সেকশন (60-70% Height Limited) */}
+      {/* CSS for Left-to-Right Scrolling Animation */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes scroll-ltr {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
+          }
+          .animate-scroll-ltr {
+            display: flex;
+            width: max-content;
+            animation: scroll-ltr 25s linear infinite;
+          }
+        `
+      }} />
+
+      {/* ১. স্লাইডারসহ প্রিমিয়াম Hero সেকশন */}
       <Hero />
 
-      {/* ২. Featured Categories (ক্যাটাগরি কালেকশন সেকশন) */}
+      {/* ১.৫. Circle Motion / Marquee Section (বাম থেকে ডানে যাবে) */}
+      <div className="w-full bg-neutral-950 text-white py-3.5 overflow-hidden flex border-y border-neutral-900">
+        <div className="animate-scroll-ltr flex items-center whitespace-nowrap">
+          {/* লুপ কন্টিনিউ রাখার জন্য অ্যারেটি ১০ বার রিপিট করা হয়েছে */}
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="flex items-center">
+              <span className="text-xs font-bold tracking-[0.3em] uppercase mx-8 text-neutral-300">
+                Aroyana Exclusives
+              </span>
+              {/* The Moving Circle */}
+              <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"></div>
+              
+              <span className="text-xs font-bold tracking-[0.3em] uppercase mx-8 text-neutral-300">
+                Premium Collection
+              </span>
+              {/* The Moving Circle */}
+              <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ২. Featured Categories */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-b border-gray-100">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-black uppercase tracking-tight">Shop By Categories</h2>
@@ -48,7 +82,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ৩. Trending Items সেকশন (৪টি কার্ড পারফেক্টলি এলাইনড) */}
+      {/* ৩. Trending Items */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-b border-gray-100">
         <div className="flex justify-between items-end mb-10">
           <div>
@@ -76,7 +110,7 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* ৪. Brand Highlights / Value Proposition (আমাদের বিশেষত্ব) */}
+      {/* ৪. Brand Highlights */}
       <section className="bg-gray-50 py-16 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -99,7 +133,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ৫. Brand Statistics Section (কাউন্টার বা সংখ্যা) */}
+      {/* ৫. Brand Statistics */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-b border-gray-100 text-center">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
@@ -121,7 +155,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ৬. Testimonials Section (কাস্টমার রিভিউ) */}
+      {/* ৬. Testimonials */}
       <section className="bg-white py-16 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -151,7 +185,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ৭. FAQ Section (সাধারণ প্রশ্নোত্তর) */}
+      {/* ৭. FAQ Section */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-b border-gray-100">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-black uppercase tracking-tight">Frequently Answered Qs</h2>
@@ -171,7 +205,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ৮. Newsletter Subscription (নিউজলেটার ইমেইল ইনপুট বক্স) */}
+      {/* ৮. Newsletter Subscription */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <div className="bg-black text-white p-10 sm:p-16 rounded-3xl space-y-6">
           <h2 className="text-3xl font-black uppercase tracking-wider">Join The Elite Club</h2>
