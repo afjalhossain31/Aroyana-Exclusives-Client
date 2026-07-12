@@ -82,6 +82,18 @@ export default function LoginPage() {
           {error && <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 p-4 rounded-lg text-sm mb-6 shadow-sm">{error}</div>}
           {success && <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 p-4 rounded-lg text-sm mb-6 shadow-sm">{success}</div>}
 
+          {/* Demo Login Button - Assignment Requirement */}
+          <button
+            type="button"
+            onClick={() => setFormData({ email: "demo@aroyana.com", password: "password123" })}
+            className="w-full mb-6 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white py-3 rounded-lg font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition border border-gray-200 dark:border-gray-700 flex justify-center items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+            </svg>
+            Quick Demo Login (Auto-fill)
+          </button>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
