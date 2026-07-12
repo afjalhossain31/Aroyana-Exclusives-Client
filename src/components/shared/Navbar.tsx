@@ -9,6 +9,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [userData, setUserData] = useState<any>(null); // ইউজারের ডাটা রাখার স্টেট
 
   // কার্ট এবং অথেনটিকেশন স্টেট চেক করার লজিক
   useEffect(() => {
@@ -16,11 +17,23 @@ export default function Navbar() {
       const token = localStorage.getItem("token");
       setIsLoggedIn(!!token);
 
+      // লোকাল স্টোরেজ থেকে ইউজারের তথ্য বের করা
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        try {
+          setUserData(JSON.parse(userStr));
+        } catch (e) {
+          console.error("Error parsing user data");
+        }
+      } else {
+        setUserData(null);
+      }
+
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       setCartCount(cart.length);
     };
 
-    // প্রথমবার লোড হওয়ার সময় চেক করবে
+    // প্রথমবার লোড হওয়ার সময় চেক করবে
     checkAuthAndCart();
 
     // ইভেন্ট লিসেনারগুলো (যখন লগইন/লগআউট বা কার্টে অ্যাড করা হবে তখন Navbar আপডেট হবে)
@@ -33,12 +46,13 @@ export default function Navbar() {
     };
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.dispatchEvent(new Event("authChange"));
-    router.push("/login");
-  };
+  // ইউজারের নামের প্রথম অক্ষর
+  const userInitial = userData?.name 
+    ? userData.name.charAt(0).toUpperCase() 
+    : (userData?.email ? userData.email.charAt(0).toUpperCase() : "U");
+
+  // ইউজারের নাম (নাম না থাকলে ইমেইলের প্রথম অংশ)
+  const displayName = userData?.name || (userData?.email ? userData.email.split('@')[0] : "Profile");
 
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
@@ -57,7 +71,7 @@ export default function Navbar() {
             <Link href="/about" className="text-sm font-bold text-gray-600 hover:text-black transition">About</Link>
             <Link href="/contact" className="text-sm font-bold text-gray-600 hover:text-black transition">Contact</Link>
             
-            {/* Conditional Auth Links (Requirements: Min 5 routes if logged in) */}
+            {/* Conditional Auth Links */}
             {isLoggedIn && (
               <>
                 <Link href="/add-item" className="text-sm font-bold text-gray-600 hover:text-black transition">Add Item</Link>
@@ -66,7 +80,7 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* User Actions (Cart, Login/Logout) */}
+          {/* User Actions (Cart, Profile/Login) */}
           <div className="hidden md:flex items-center space-x-6">
             {/* Cart Icon */}
             <Link href="/cart" className="relative text-gray-900 hover:text-gray-600 transition">
@@ -80,11 +94,16 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* Auth Buttons */}
+            {/* Auth/Profile */}
             {isLoggedIn ? (
-              <button onClick={handleLogout} className="text-sm font-bold text-red-600 hover:text-red-800 transition">
-                Logout
-              </button>
+              <Link href="/profile" className="flex items-center gap-2 group border-l border-gray-200 pl-6">
+                <div className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-black text-gray-900 group-hover:bg-black group-hover:text-white transition-all">
+                  {userInitial}
+                </div>
+                <span className="text-sm font-bold text-gray-700 group-hover:text-black transition max-w-[100px] truncate hidden lg:block">
+                  {displayName}
+                </span>
+              </Link>
             ) : (
               <Link href="/login" className="bg-black text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-800 transition shadow-sm">
                 Sign In
@@ -123,25 +142,28 @@ export default function Navbar() {
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-6 space-y-1 shadow-lg absolute w-full">
-          <Link href="/" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50">Home</Link>
-          <Link href="/explore" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50">Explore</Link>
-          <Link href="/about" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50">About</Link>
-          <Link href="/contact" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50">Contact</Link>
+          <Link href="/" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Home</Link>
+          <Link href="/explore" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Explore</Link>
+          <Link href="/about" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>About</Link>
+          <Link href="/contact" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Contact</Link>
           
           {isLoggedIn && (
             <>
-              <Link href="/add-item" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50">Add Item</Link>
-              <Link href="/items/manage" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50">Manage Items</Link>
+              <Link href="/add-item" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Add Item</Link>
+              <Link href="/items/manage" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Manage Items</Link>
             </>
           )}
 
-          <div className="pt-4 border-t border-gray-100">
+          <div className="pt-4 border-t border-gray-100 mt-2">
             {isLoggedIn ? (
-              <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="w-full text-left px-3 py-3 rounded-md text-base font-bold text-red-600 hover:bg-red-50">
-                Logout
-              </button>
+              <Link href="/profile" className="flex items-center gap-3 px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>
+                <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-sm font-black">
+                  {userInitial}
+                </div>
+                <span>My Profile</span>
+              </Link>
             ) : (
-              <Link href="/login" className="block w-full text-center bg-black text-white px-5 py-3 rounded-lg text-base font-bold hover:bg-gray-800 transition">
+              <Link href="/login" className="block w-full text-center bg-black text-white px-5 py-3 rounded-lg text-base font-bold hover:bg-gray-800 transition" onClick={() => setIsMenuOpen(false)}>
                 Sign In
               </Link>
             )}
