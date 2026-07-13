@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // Link ইমপোর্ট করা হয়েছে
+import Link from "next/link";
 
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [activeSubTab, setActiveSubTab] = useState("My Details");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -17,7 +19,6 @@ export default function ProfilePage() {
     }
   }, [router]);
 
-  // লগআউট ফাংশন
   const handleLogout = () => {
     if (confirm("Are you sure you want to log out?")) {
       localStorage.removeItem("token");
@@ -27,130 +28,96 @@ export default function ProfilePage() {
     }
   };
 
-  if (!user) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="animate-pulse text-gray-400 font-medium">Loading Profile...</div>
-    </div>
-  );
+  if (!user) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Profile Header */}
-        <div className="mb-10 text-center md:text-left border-b border-gray-200 pb-6">
-          <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tight">My Account</h1>
-          <p className="text-gray-500 mt-2">Manage your premium Aroyana profile and preferences.</p>
-        </div>
-
+      <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
           {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full">
-              
-              {/* User Avatar & Info */}
-              <div className="text-center mb-8 pb-8 border-b border-gray-100">
-                <div className="w-24 h-24 bg-gray-900 text-white rounded-full flex items-center justify-center text-4xl font-black mx-auto mb-4 shadow-md">
-                  {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                </div>
-                <h2 className="font-bold text-xl text-gray-900 truncate">{user.name || "Aroyana Member"}</h2>
-                <p className="text-sm text-gray-500 truncate mt-1">{user.email}</p>
-              </div>
-              
-              {/* Sidebar Menu */}
-              <div className="space-y-2 flex-grow">
-                <button className="w-full text-left px-5 py-3 bg-gray-50 text-gray-900 rounded-xl font-bold border border-gray-200 transition">
-                  Overview
-                </button>
-                <button className="w-full text-left px-5 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-medium transition">
-                  Order History
-                </button>
+          <div className="lg:col-span-1 space-y-4">
+            <div className="bg-white p-6 rounded-2xl border text-center">
+              <div className="w-24 h-24 bg-gray-900 text-white rounded-full flex items-center justify-center text-4xl font-black mx-auto mb-4">{user.name?.charAt(0).toUpperCase()}</div>
+              <h2 className="font-bold text-lg">{user.name}</h2>
+            </div>
 
-                {/* ✨ Admin Panel Button (Added Here) ✨ */}
-                <Link 
-                  href="/admin" 
-                  className="w-full flex items-center justify-between px-5 py-3 bg-black text-white hover:bg-gray-800 rounded-xl font-bold transition shadow-sm"
-                >
-                  <span>Admin Panel</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </Link>
-
-                <button className="w-full text-left px-5 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-medium transition">
-                  Settings
+            <nav className="bg-white p-4 rounded-2xl border space-y-2">
+              <Link href="/admin" className="w-full flex items-center justify-between px-5 py-3 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition">
+                Admin Panel <span>&rarr;</span>
+              </Link>
+              {['overview', 'orders', 'settings'].map((tab) => (
+                <button key={tab} onClick={() => setActiveTab(tab)} className={`w-full text-left px-5 py-3 rounded-xl font-bold capitalize transition ${activeTab === tab ? 'bg-gray-100' : 'hover:bg-gray-50'}`}>
+                  {tab}
                 </button>
-              </div>
-
-              {/* Logout Button */}
-              <div className="pt-8 mt-4 border-t border-gray-100">
-                <button 
-                  onClick={handleLogout} 
-                  className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl font-bold transition-colors duration-300"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
+              ))}
+              {/* Logout Button moved to bottom of sidebar */}
+              <div className="pt-4 mt-4 border-t border-gray-100">
+                <button onClick={handleLogout} className="w-full px-5 py-3 text-red-600 font-bold hover:bg-red-50 rounded-xl transition">
                   Sign Out
                 </button>
               </div>
-
-            </div>
+            </nav>
           </div>
 
-          {/* Main Info Section */}
-          <div className="lg:col-span-3">
-            <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-gray-100">
-              <h3 className="text-xl font-black text-gray-900 mb-8 uppercase tracking-wide border-b border-gray-100 pb-4">
-                Personal Information
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <div className="group">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Full Name</p>
-                  <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl text-gray-900 font-medium group-hover:border-gray-300 transition">
-                    {user.name || "N/A"}
-                  </div>
+          {/* Main Content */}
+          <div className="lg:col-span-3 bg-white p-8 rounded-2xl border min-h-[500px]">
+            {activeTab === 'overview' && (
+              <div className="space-y-6">
+                <h3 className="text-2xl font-black border-b pb-4">Account Overview</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-5 bg-gray-50 rounded-xl border"><p className="text-xs font-bold text-gray-400 uppercase">Name</p><p className="font-bold">{user.name}</p></div>
+                  <div className="p-5 bg-gray-50 rounded-xl border"><p className="text-xs font-bold text-gray-400 uppercase">Email</p><p className="font-bold">{user.email}</p></div>
                 </div>
-
-                <div className="group">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Email Address</p>
-                  <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl text-gray-900 font-medium group-hover:border-gray-300 transition">
-                    {user.email}
-                  </div>
-                </div>
-
-                <div className="group">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Membership Status</p>
-                  <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl text-gray-900 font-medium group-hover:border-gray-300 transition flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                    Aroyana VIP Member
-                  </div>
-                </div>
-
-                <div className="group">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Primary Location</p>
-                  <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl text-gray-900 font-medium group-hover:border-gray-300 transition">
-                    Dhaka, Bangladesh
-                  </div>
-                </div>
-
               </div>
+            )}
 
-              {/* Edit Profile Banner */}
-              <div className="mt-10 bg-gray-50 border border-gray-200 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <h4 className="font-bold text-gray-900 text-lg">Update Profile</h4>
-                  <p className="text-sm text-gray-500 mt-1">Keep your information up to date for seamless deliveries.</p>
-                </div>
-                <button className="whitespace-nowrap px-6 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition shadow-sm">
-                  Edit Details
-                </button>
+            {activeTab === 'orders' && (
+              <div>
+                <h3 className="text-2xl font-black border-b pb-4 mb-6">Order History</h3>
+                <div className="p-4 border rounded-xl flex justify-between items-center"><p className="font-bold">Order #AR-8829</p><span className="bg-green-100 px-3 py-1 rounded-full text-xs font-bold">Delivered</span></div>
               </div>
+            )}
 
-            </div>
+            {activeTab === 'settings' && (
+              <div className="space-y-6">
+                <h3 className="text-2xl font-black border-b pb-4">Settings</h3>
+                <div className="flex space-x-6 border-b">
+                  {['My Details', 'Profile', 'Password'].map((sub) => (
+                    <button key={sub} onClick={() => setActiveSubTab(sub)} className={`pb-2 text-sm font-bold ${activeSubTab === sub ? 'border-b-2 border-black' : 'text-gray-500'}`}>
+                      {sub}
+                    </button>
+                  ))}
+                </div>
+
+                {activeSubTab === 'My Details' && (
+                   <div className="pt-4 space-y-4">
+                     <label className="block font-bold">Display Name</label>
+                     <input type="text" defaultValue={user.name} className="w-full p-3 border rounded-xl" />
+                     <button className="bg-black text-white px-6 py-2 rounded-xl font-bold">Save Name</button>
+                   </div>
+                )}
+
+                {activeSubTab === 'Profile' && (
+                   <div className="pt-4 space-y-4">
+                     <label className="block font-bold">Bio/Profile Info</label>
+                     <textarea className="w-full p-3 border rounded-xl" rows={4} placeholder="Write something about yourself..."></textarea>
+                     <button className="bg-black text-white px-6 py-2 rounded-xl font-bold">Update Profile</button>
+                   </div>
+                )}
+
+                {activeSubTab === 'Password' && (
+                  <div className="space-y-4 pt-4">
+                    <div><label className="block font-bold">Current password</label><input type="password" placeholder="••••••••" className="w-full p-3 border rounded-xl" /></div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div><label className="block font-bold">New password</label><input type="password" placeholder="••••••••" className="w-full p-3 border rounded-xl" /></div>
+                      <div><label className="block font-bold">Confirm new password</label><input type="password" placeholder="••••••••" className="w-full p-3 border rounded-xl" /></div>
+                    </div>
+                    <button className="bg-black text-white px-6 py-2 rounded-xl font-bold mt-4">Update password</button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

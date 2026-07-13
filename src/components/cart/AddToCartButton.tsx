@@ -6,17 +6,25 @@ export default function AddToCartButton({ item }: { item: any }) {
   const router = useRouter();
 
   const handleAddToCart = () => {
-    // ১. ইউজার চেক
+    // ১. লগইন চেক (টোকেন যাচাই)
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login first to add items to your cart.");
+      router.push("/login");
+      return;
+    }
+
+    // ২. ইউজার ডাটা চেক
     const userStr = localStorage.getItem("user");
     const currentUser = userStr ? JSON.parse(userStr) : null;
     
-    // ২. ডাইনামিক কি (Key) তৈরি
+    // ৩. ডাইনামিক কি (Key) তৈরি
     const cartKey = currentUser ? `cart_${currentUser.email}` : "guest_cart";
     
-    // ৩. বর্তমান কার্ট ডাটা
+    // ৪. বর্তমান কার্ট ডাটা
     const currentCart = JSON.parse(localStorage.getItem(cartKey) || "[]");
 
-    // ৪. আইটেম ফরম্যাট (Cart পেজের সাথে মিল রেখে)
+    // ৫. আইটেম ফরম্যাট (Cart পেজের সাথে মিল রেখে)
     const cartItem = {
       _id: item._id,
       name: item.title,
@@ -25,21 +33,21 @@ export default function AddToCartButton({ item }: { item: any }) {
       category: item.category || "Luxury Collection"
     };
 
-    // ৫. সেভ করা
+    // ৬. সেভ করা
     const updatedCart = [...currentCart, cartItem];
     localStorage.setItem(cartKey, JSON.stringify(updatedCart));
 
-    // ৬. ন্যাভবার আপডেট
+    // ৭. ন্যাভবার আপডেট
     window.dispatchEvent(new Event("cartChange"));
     
-    // ৭. ✨ সরাসরি কার্ট পেজে রিডাইরেক্ট
+    // ৮. সরাসরি কার্ট পেজে রিডাইরেক্ট
     router.push("/cart");
   };
 
   return (
     <button 
       onClick={handleAddToCart}
-      className="flex-[2] bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition text-lg font-bold shadow-lg"
+      className="flex-[2] bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition text-lg font-bold shadow-lg active:scale-95"
     >
       Add to Cart
     </button>
