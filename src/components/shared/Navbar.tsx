@@ -46,8 +46,8 @@ export default function Navbar() {
     };
   }, []);
 
-  const userInitial = userData?.name 
-    ? userData.name.charAt(0).toUpperCase() 
+  const userInitial = userData?.name
+    ? userData.name.charAt(0).toUpperCase()
     : (userData?.email ? userData.email.charAt(0).toUpperCase() : "U");
 
   const displayName = userData?.name || (userData?.email ? userData.email.split('@')[0] : "Profile");
@@ -56,20 +56,63 @@ export default function Navbar() {
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          
+
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 flex items-center">
-            <span className="text-2xl font-black tracking-widest text-gray-900 uppercase">Aroyana</span>
+
+          <Link href="/" className="flex-shrink-0 flex flex-col leading-none">
+            <h1 className="text-3xl font-black tracking-[0.18em] uppercase">
+              <span className="bg-gradient-to-r from-violet-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                Aroyana
+              </span>
+            </h1>
+
+            <span className="mt-1 text-[10px] tracking-[0.45em] uppercase text-gray-400 font-semibold">
+              EXCLUSIVES
+            </span>
+
           </Link>
 
+
           {/* Desktop Menu - Common Links including Blog */}
-          <div className="hidden md:flex space-x-8 items-center">
-            <Link href="/" className="text-sm font-bold text-gray-600 hover:text-black transition">Home</Link>
-            <Link href="/explore" className="text-sm font-bold text-gray-600 hover:text-black transition">Explore</Link>
-            <Link href="/blog" className="text-sm font-bold text-gray-600 hover:text-black transition">Blog</Link>
-            <Link href="/about" className="text-sm font-bold text-gray-600 hover:text-black transition">About</Link>
-            <Link href="/contact" className="text-sm font-bold text-gray-600 hover:text-black transition">Contact</Link>
+          <div className="hidden md:flex items-center gap-3">
+
+            <Link
+              href="/"
+              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
+            >
+              Home
+            </Link>
+
+            <Link
+              href="/explore"
+              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
+            >
+              Explore
+            </Link>
+
+            <Link
+              href="/blog"
+              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
+            >
+              Blog
+            </Link>
+
+            <Link
+              href="/about"
+              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
+            >
+              About
+            </Link>
+
+            <Link
+              href="/contact"
+              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
+            >
+              Contact
+            </Link>
+
           </div>
+
 
           {/* User Actions (Cart, Profile/Login) */}
           <div className="hidden md:flex items-center space-x-6">
@@ -112,8 +155,8 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-900 hover:text-gray-600 focus:outline-none"
             >
               <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">

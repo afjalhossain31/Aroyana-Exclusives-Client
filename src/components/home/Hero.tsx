@@ -37,14 +37,13 @@ export default function Hero() {
 
   return (
     <div className="relative w-full h-[70vh] overflow-hidden bg-gray-900 flex items-center justify-center">
-      
+
       {/* 1. Background Image Slider */}
       {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
         >
           <img
             src={slide.image}
@@ -59,14 +58,17 @@ export default function Hero() {
 
       {/* 2. Interactive Content & CTA */}
       <div className="relative z-20 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
-        <span className="text-white/80 uppercase tracking-[0.3em] text-xs font-bold mb-4 block animate-fade-in-up">
+
+        <span className="inline-block uppercase tracking-[0.35em] text-xs font-bold mb-5 px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white">
           Welcome to Aroyana
         </span>
-        
-        <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight drop-shadow-lg transition-all duration-700">
-          {slides[currentSlide].title}
+
+        <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight transition-all duration-700 leading-tight">
+          <span className="bg-gradient-to-r from-white via-fuchsia-200 to-violet-300 bg-clip-text text-transparent drop-shadow-lg">
+            {slides[currentSlide].title}
+          </span>
         </h1>
-        
+
         <p className="text-gray-200 text-sm md:text-lg mb-10 max-w-2xl mx-auto drop-shadow-md transition-all duration-700">
           {slides[currentSlide].subtitle}
         </p>
@@ -74,13 +76,13 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link
             href="/explore"
-            className="bg-white text-black px-8 py-3.5 rounded-sm font-bold text-sm tracking-wide hover:bg-gray-200 transition-all active:scale-95 shadow-xl"
+            className="px-8 py-3.5 rounded-sm font-bold text-sm tracking-wide border border-white/40 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-black transition-all duration-300 active:scale-95"
           >
             Shop Premium
           </Link>
           <Link
             href="/explore"
-            className="bg-transparent border border-white text-white px-8 py-3.5 rounded-sm font-bold text-sm tracking-wide hover:bg-white hover:text-black transition-all active:scale-95 shadow-xl"
+            className="px-8 py-3.5 rounded-sm font-bold text-sm tracking-wide border border-white/40 bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-black transition-all duration-300 active:scale-95"
           >
             Explore Collections
           </Link>
@@ -88,15 +90,16 @@ export default function Hero() {
       </div>
 
       {/* 3. Slider Navigation Dots */}
-      <div className="absolute bottom-16 z-20 flex gap-3">
+      <div className="absolute bottom-16 z-20 flex items-center gap-3">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-12 h-1 rounded-full transition-all duration-300 ${
-              index === currentSlide ? "bg-white" : "bg-white/30 hover:bg-white/50"
-            }`}
             aria-label={`Go to slide ${index + 1}`}
+            className={`h-2 rounded-full transition-all duration-500 ${index === currentSlide
+                ? "w-14 bg-gradient-to-r from-fuchsia-300 via-violet-400 to-blue-600 shadow-lg shadow-violet-500/40"
+                : "w-3 bg-white/30 hover:w-6 hover:bg-white/60"
+              }`}
           />
         ))}
       </div>
