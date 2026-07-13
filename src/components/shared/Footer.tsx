@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-neutral-950 text-neutral-300 pt-20 pb-10 border-t border-neutral-900 mt-auto font-light">
+    <footer className="bg-neutral-950 text-neutral-300 pt-20 pb-5 border-t border-neutral-900 mt-auto font-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
@@ -19,8 +19,8 @@ export default function Footer() {
 
           {/* ২. The Boutique (Quick Links) */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white mb-6">The Boutique</h3>
-            <ul className="space-y-4 text-sm text-neutral-400">
+            <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white mb-5">The Boutique</h3>
+            <ul className="space-y-5 text-sm text-neutral-400">
               <li><Link href="/explore" className="hover:text-white transition-colors duration-300">Latest Collection</Link></li>
               <li><Link href="/explore" className="hover:text-white transition-colors duration-300">Premium Gowns</Link></li>
               <li><Link href="/explore" className="hover:text-white transition-colors duration-300">Luxury Bags</Link></li>
@@ -30,8 +30,8 @@ export default function Footer() {
 
           {/* ৩. Client Services */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white mb-6">Client Services</h3>
-            <ul className="space-y-4 text-sm text-neutral-400">
+            <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white mb-5">Client Services</h3>
+            <ul className="space-y-5 text-sm text-neutral-400">
               <li><Link href="/contact" className="hover:text-white transition-colors duration-300">Contact Concierge</Link></li>
               <li><Link href="/contact" className="hover:text-white transition-colors duration-300">Shipping & Returns</Link></li>
               <li><Link href="/contact" className="hover:text-white transition-colors duration-300">Size Guide</Link></li>

@@ -32,7 +32,7 @@ export default function AddItemPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/api/items", {
+      const res = await fetch(`http://127.0.0.1:5000/api/items/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
