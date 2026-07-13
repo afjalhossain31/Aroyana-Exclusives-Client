@@ -85,7 +85,7 @@ export default function LoginPage() {
           {/* Demo Login Button - Assignment Requirement */}
           <button
             type="button"
-            onClick={() => setFormData({ email: "demo@aroyana.com", password: "password123" })}
+            onClick={() => setFormData({ email: "demo@aroyana.com", password: "12345678" })}
             className="w-full mb-6 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white py-3 rounded-lg font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition border border-gray-200 dark:border-gray-700 flex justify-center items-center gap-2"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
@@ -102,7 +102,7 @@ export default function LoginPage() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Password</label>
-                <a href="#" className="text-sm text-primary hover:underline transition">Forgot password?</a>
+                <a href="#" className="text-sm text-secondary hover:underline transition">Forgot password?</a>
               </div>
               <input type="password" name="password" required value={formData.password} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white" placeholder="Enter your password" />
             </div>
@@ -111,7 +111,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="mt-8 text-center text-gray-600 dark:text-gray-400">Don't have an account? <Link href="/register" className="text-primary font-bold hover:underline transition">Create one</Link></p>
+          <p className="mt-8 text-center text-gray-600 dark:text-gray-400">Don't have an account? <Link href="/register" className="text-secondary font-bold hover:underline transition">Create account</Link></p>
         </div>
       </div>
     </div>

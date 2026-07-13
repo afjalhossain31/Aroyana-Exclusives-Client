@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // Link ইমপোর্ট করা হয়েছে
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -65,9 +66,18 @@ export default function ProfilePage() {
                 <button className="w-full text-left px-5 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-medium transition">
                   Order History
                 </button>
-                <button className="w-full text-left px-5 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-medium transition">
-                  Saved Items
-                </button>
+
+                {/* ✨ Admin Panel Button (Added Here) ✨ */}
+                <Link 
+                  href="/admin" 
+                  className="w-full flex items-center justify-between px-5 py-3 bg-black text-white hover:bg-gray-800 rounded-xl font-bold transition shadow-sm"
+                >
+                  <span>Admin Panel</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </Link>
+
                 <button className="w-full text-left px-5 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-medium transition">
                   Settings
                 </button>

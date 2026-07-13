@@ -9,15 +9,13 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartCount, setCartCount] = useState(0);
-  const [userData, setUserData] = useState<any>(null); // ইউজারের ডাটা রাখার স্টেট
+  const [userData, setUserData] = useState<any>(null);
 
-  // কার্ট এবং অথেনটিকেশন স্টেট চেক করার লজিক
   useEffect(() => {
     const checkAuthAndCart = () => {
       const token = localStorage.getItem("token");
       setIsLoggedIn(!!token);
 
-      // লোকাল স্টোরেজ থেকে ইউজারের তথ্য বের করা
       const userStr = localStorage.getItem("user");
       if (userStr) {
         try {
@@ -33,10 +31,7 @@ export default function Navbar() {
       setCartCount(cart.length);
     };
 
-    // প্রথমবার লোড হওয়ার সময় চেক করবে
     checkAuthAndCart();
-
-    // ইভেন্ট লিসেনারগুলো (যখন লগইন/লগআউট বা কার্টে অ্যাড করা হবে তখন Navbar আপডেট হবে)
     window.addEventListener("authChange", checkAuthAndCart);
     window.addEventListener("cartChange", checkAuthAndCart);
 
@@ -46,12 +41,10 @@ export default function Navbar() {
     };
   }, []);
 
-  // ইউজারের নামের প্রথম অক্ষর
   const userInitial = userData?.name 
     ? userData.name.charAt(0).toUpperCase() 
     : (userData?.email ? userData.email.charAt(0).toUpperCase() : "U");
 
-  // ইউজারের নাম (নাম না থাকলে ইমেইলের প্রথম অংশ)
   const displayName = userData?.name || (userData?.email ? userData.email.split('@')[0] : "Profile");
 
   return (
@@ -64,25 +57,17 @@ export default function Navbar() {
             <span className="text-2xl font-black tracking-widest text-gray-900 uppercase">Aroyana</span>
           </Link>
 
-          {/* Desktop Menu - Common Links */}
+          {/* Desktop Menu - Common Links including Blog */}
           <div className="hidden md:flex space-x-8 items-center">
             <Link href="/" className="text-sm font-bold text-gray-600 hover:text-black transition">Home</Link>
             <Link href="/explore" className="text-sm font-bold text-gray-600 hover:text-black transition">Explore</Link>
+            <Link href="/blog" className="text-sm font-bold text-gray-600 hover:text-black transition">Blog</Link>
             <Link href="/about" className="text-sm font-bold text-gray-600 hover:text-black transition">About</Link>
             <Link href="/contact" className="text-sm font-bold text-gray-600 hover:text-black transition">Contact</Link>
-            
-            {/* Conditional Auth Links */}
-            {isLoggedIn && (
-              <>
-                <Link href="/add-item" className="text-sm font-bold text-gray-600 hover:text-black transition">Add Item</Link>
-                <Link href="/items/manage" className="text-sm font-bold text-gray-600 hover:text-black transition">Manage</Link>
-              </>
-            )}
           </div>
 
           {/* User Actions (Cart, Profile/Login) */}
           <div className="hidden md:flex items-center space-x-6">
-            {/* Cart Icon */}
             <Link href="/cart" className="relative text-gray-900 hover:text-gray-600 transition">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -94,7 +79,6 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* Auth/Profile */}
             {isLoggedIn ? (
               <Link href="/profile" className="flex items-center gap-2 group border-l border-gray-200 pl-6">
                 <div className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-black text-gray-900 group-hover:bg-black group-hover:text-white transition-all">
@@ -144,15 +128,9 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-6 space-y-1 shadow-lg absolute w-full">
           <Link href="/" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Home</Link>
           <Link href="/explore" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Explore</Link>
+          <Link href="/blog" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Blog</Link>
           <Link href="/about" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>About</Link>
           <Link href="/contact" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Contact</Link>
-          
-          {isLoggedIn && (
-            <>
-              <Link href="/add-item" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Add Item</Link>
-              <Link href="/items/manage" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Manage Items</Link>
-            </>
-          )}
 
           <div className="pt-4 border-t border-gray-100 mt-2">
             {isLoggedIn ? (
