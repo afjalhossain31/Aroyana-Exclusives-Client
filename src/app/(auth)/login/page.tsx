@@ -3,6 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+// React Icons ইমপোর্ট করা হলো
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -55,8 +58,15 @@ export default function LoginPage() {
     }
   };
 
+  // সোশ্যাল লগইনের ডামি ফাংশন (পরে লজিক বসানোর জন্য)
+  const handleSocialLogin = (provider: string) => {
+    console.log(`Connecting to ${provider}...`);
+    // TODO: Add backend logic here later
+  };
+
   return (
     <div className="min-h-screen flex bg-white dark:bg-black">
+      {/* Left Side - Image Background */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900">
         <img
           src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1200"
@@ -72,6 +82,7 @@ export default function LoginPage() {
         </div>
       </div>
 
+      {/* Right Side - Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-24">
         <div className="max-w-md w-full">
           <div className="text-left mb-10">
@@ -97,21 +108,49 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
-              <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white" placeholder="name@example.com" />
+              <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white transition-colors" placeholder="name@example.com" />
             </div>
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Password</label>
                 <a href="#" className="text-sm text-secondary hover:underline transition">Forgot password?</a>
               </div>
-              <input type="password" name="password" required value={formData.password} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white" placeholder="Enter your password" />
+              <input type="password" name="password" required value={formData.password} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white transition-colors" placeholder="Enter your password" />
             </div>
             <button type="submit" disabled={loading} className="w-full bg-black dark:bg-white text-white dark:text-black py-3.5 rounded-lg font-bold text-lg hover:opacity-90 transition shadow-lg disabled:bg-gray-400 mt-4">
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
-          <p className="mt-8 text-center text-gray-600 dark:text-gray-400">Don't have an account? <Link href="/register" className="text-secondary font-bold hover:underline transition">Create account</Link></p>
+          {/* Divider */}
+          <div className="flex items-center my-8">
+            <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+            <span className="px-4 text-xs uppercase tracking-widest text-gray-400 font-semibold">Or continue with</span>
+            <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+          </div>
+
+          {/* Social Login Buttons (Updated with react-icons) */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <button 
+              type="button" 
+              onClick={() => handleSocialLogin('Google')}
+              className="flex items-center justify-center w-full px-4 py-3 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-black text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700 transition-all font-semibold text-sm shadow-sm"
+            >
+              <FcGoogle className="h-5 w-5 mr-2" />
+              Google
+            </button>
+
+            <button 
+              type="button" 
+              onClick={() => handleSocialLogin('Facebook')}
+              className="flex items-center justify-center w-full px-4 py-3 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-black text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700 transition-all font-semibold text-sm shadow-sm"
+            >
+              <FaFacebook className="h-5 w-5 mr-2 text-[#0a5cc8]" />
+              Facebook
+            </button>
+          </div>
+
+          <p className="text-center text-gray-600 dark:text-gray-400">Don't have an account? <Link href="/register" className="text-secondary font-bold hover:underline transition">Create account</Link></p>
         </div>
       </div>
     </div>

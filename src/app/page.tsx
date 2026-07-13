@@ -250,6 +250,7 @@ export default async function HomePage() {
 
       {/* ৭. FAQ Section */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-b border-gray-100">
+        
         <div className="text-center mb-14 animate-fade-in-up delay-100">
           <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight">Frequently Answered Qs</h2>
           <p className="text-gray-500 mt-3 text-sm md:text-base">Quick answers to common inquiries regarding our premium policies.</p>

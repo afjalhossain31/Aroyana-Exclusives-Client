@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // রিডাইরেক্ট করার জন্য যুক্ত হলো
+import { useRouter } from "next/navigation";
+// React Icons ইমপোর্ট করা হলো
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
 
 export default function RegisterPage() {
-  const router = useRouter(); // রাউটার ইনিশিয়ালাইজ করা
+  const router = useRouter();
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -46,7 +49,6 @@ export default function RegisterPage() {
         setSuccess("Account created successfully! Redirecting to login...");
         setFormData({ name: "", email: "", password: "", confirmPassword: "" });
         
-        // দেড় সেকেন্ড (১৫০০ মিলিসেকেন্ড) পর লগইন পেজে পাঠিয়ে দেবে
         setTimeout(() => {
           router.push("/login");
         }, 1500);
@@ -58,9 +60,14 @@ export default function RegisterPage() {
     }
   };
 
+  const handleSocialRegister = (provider: string) => {
+    console.log(`Connecting to ${provider} for registration...`);
+    // TODO: Add backend logic here later
+  };
+
   return (
-    // ... (আগের ডিজাইন হুবহু একই থাকবে, আমি শুধু লজিক আপডেট করেছি)
-    <div className="min-h-screen flex bg-white">
+    <div className="min-h-screen flex bg-white dark:bg-black">
+      {/* Left Side - Image Background */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900">
         <img
           src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200"
@@ -76,39 +83,68 @@ export default function RegisterPage() {
         </div>
       </div>
 
+      {/* Right Side - Register Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-24">
         <div className="max-w-md w-full">
           <div className="text-left mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Create an Account</h2>
-            <p className="text-gray-500">Enter your details to get started.</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Create an Account</h2>
+            <p className="text-gray-500 dark:text-gray-400">Enter your details to get started.</p>
           </div>
 
-          {error && <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-sm mb-6 shadow-sm">{error}</div>}
-          {success && <div className="bg-green-50 border border-green-200 text-green-600 p-4 rounded-lg text-sm mb-6 shadow-sm">{success}</div>}
+          {error && <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 p-4 rounded-lg text-sm mb-6 shadow-sm">{error}</div>}
+          {success && <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 p-4 rounded-lg text-sm mb-6 shadow-sm">{success}</div>}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
-              <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. John Doe" />
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+              <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white transition-colors" placeholder="e.g. Nanziba Aroya" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-              <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="name@example.com" />
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+              <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white transition-colors" placeholder="name@example.com" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-              <input type="password" name="password" required value={formData.password} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="Create a strong password" />
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password</label>
+              <input type="password" name="password" required value={formData.password} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white transition-colors" placeholder="Create a strong password" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
-              <input type="password" name="confirmPassword" required value={formData.confirmPassword} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" placeholder="Re-enter your password" />
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Confirm Password</label>
+              <input type="password" name="confirmPassword" required value={formData.confirmPassword} onChange={handleChange} className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg focus:ring-2 focus:ring-primary outline-none dark:text-white transition-colors" placeholder="Re-enter your password" />
             </div>
-            <button type="submit" disabled={loading} className="w-full bg-primary text-white py-3.5 rounded-lg font-bold text-lg hover:bg-gray-800 transition shadow-lg hover:shadow-xl disabled:bg-gray-400 mt-4">
+            <button type="submit" disabled={loading} className="w-full bg-black dark:bg-white text-white dark:text-black py-3.5 rounded-lg font-bold text-lg hover:opacity-90 transition shadow-lg disabled:bg-gray-400 mt-4">
               {loading ? "Creating Account..." : "Register"}
             </button>
           </form>
 
-          <p className="mt-8 text-center text-gray-600">Already have an account? <Link href="/login" className="text-primary font-bold hover:underline transition">Sign in</Link></p>
+          {/* Divider */}
+          <div className="flex items-center my-8">
+            <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+            <span className="px-4 text-xs uppercase tracking-widest text-gray-400 font-semibold">Or sign up with</span>
+            <div className="flex-grow border-t border-gray-200 dark:border-gray-800"></div>
+          </div>
+
+          {/* Social Registration Buttons (Updated with react-icons) */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <button 
+              type="button" 
+              onClick={() => handleSocialRegister('Google')}
+              className="flex items-center justify-center w-full px-4 py-3 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-black text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700 transition-all font-semibold text-sm shadow-sm"
+            >
+              <FcGoogle className="h-5 w-5 mr-2" />
+              Google
+            </button>
+
+            <button 
+              type="button" 
+              onClick={() => handleSocialRegister('Facebook')}
+              className="flex items-center justify-center w-full px-4 py-3 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-black text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700 transition-all font-semibold text-sm shadow-sm"
+            >
+              <FaFacebook className="h-5 w-5 mr-2 text-[#0a5cc8]" />
+              Facebook
+            </button>
+          </div>
+
+          <p className="text-center text-gray-600 dark:text-gray-400">Already have an account? <Link href="/login" className="text-black dark:text-white font-bold hover:underline transition">Sign in</Link></p>
         </div>
       </div>
     </div>

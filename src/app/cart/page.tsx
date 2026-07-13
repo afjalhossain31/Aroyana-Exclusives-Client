@@ -4,73 +4,79 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function CartPage() {
-  const [cart, setCart] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartKey, setCartKey] = useState("guest_cart");
 
   useEffect(() => {
-    // লোকাল স্টোরেজ থেকে কার্ট ডাটা লোড করা
-    setCart(JSON.parse(localStorage.getItem("cart") || "[]"));
+    const userStr = localStorage.getItem("user");
+    const currentUser = userStr ? JSON.parse(userStr) : null;
+    
+    // ডাইনামিক কি সেটআপ
+    const activeKey = currentUser ? `cart_${currentUser.email}` : "guest_cart";
+    setCartKey(activeKey);
+
+    const items = JSON.parse(localStorage.getItem(activeKey) || "[]");
+    setCartItems(items);
   }, []);
 
-  const removeFromCart = (id: string) => {
-    const updatedCart = cart.filter((item) => item._id !== id);
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    // Navbar-এর কার্ট কাউন্ট আপডেট করার জন্য সিগন্যাল
-    window.dispatchEvent(new Event("cartChange"));
+  const removeFromCart = (indexToRemove: number) => {
+    const updatedCart = cartItems.filter((_, idx) => idx !== indexToRemove);
+    setCartItems(updatedCart);
+    localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cartChange")); // ন্যাভবার আপডেট করার জন্য
   };
 
-  const totalPrice = cart.reduce((acc, item) => acc + (parseFloat(item.price) || 0), 0);
+  const totalPrice = cartItems.reduce((total, item) => total + (Number(item.price) || 0), 0);
 
   return (
-    <div className="max-w-5xl mx-auto py-16 px-4 min-h-screen">
-      <h1 className="text-3xl font-black mb-10 text-gray-900">My Shopping Cart</h1>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tight mb-8">Your Shopping Bag</h1>
 
-      {cart.length === 0 ? (
-        <div className="text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-          <p className="text-gray-500 mb-6">Your cart is currently empty.</p>
-          <Link href="/explore" className="bg-black text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-800 transition">
-            Explore Products
-          </Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* কার্ট আইটেম লিস্ট */}
-          <div className="lg:col-span-2 space-y-6">
-            {cart.map((item: any) => (
-              <div key={item._id} className="flex items-center gap-6 border-b pb-6">
-                <img src={item.imageUrl} alt={item.title} className="w-24 h-24 object-cover rounded-xl" />
-                <div className="flex-1">
-                  <h2 className="font-bold text-lg">{item.title}</h2>
-                  <p className="font-bold text-primary mt-1">${item.price}</p>
+        {cartItems.length === 0 ? (
+          <div className="bg-white p-12 text-center rounded-2xl border border-gray-100 shadow-sm">
+            <p className="text-gray-500 font-medium mb-6">Your cart is completely empty.</p>
+            <Link href="/explore" className="inline-block bg-black text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-gray-800 transition">
+              Continue Shopping
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              {cartItems.map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between p-6 border-b border-gray-100 last:border-0">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                      <img src={item.image || "https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=150"} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 uppercase text-sm tracking-wide">{item.name}</h3>
+                      <p className="text-xs text-gray-400 mt-1 uppercase">{item.category || "Luxury Collection"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <span className="font-black text-gray-900">${item.price}</span>
+                    <button onClick={() => removeFromCart(idx)} className="text-red-500 hover:text-red-700 text-sm font-bold uppercase tracking-wider">
+                      Remove
+                    </button>
+                  </div>
                 </div>
-                <button 
-                  onClick={() => removeFromCart(item._id)}
-                  className="text-red-500 hover:text-red-700 font-bold text-sm"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* অর্ডার সামারি */}
-          <div className="bg-gray-50 p-8 rounded-2xl h-fit border border-gray-100">
-            <h2 className="text-xl font-bold mb-6">Order Summary</h2>
-            <div className="flex justify-between mb-4">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="font-bold">${totalPrice.toFixed(2)}</span>
+            {/* Total Summary */}
+            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div>
+                <span className="text-gray-400 text-xs font-bold uppercase tracking-widest">Total Balance</span>
+                <h2 className="text-2xl font-black text-gray-900 mt-1">${totalPrice.toFixed(2)}</h2>
+              </div>
+              <button className="w-full sm:w-auto bg-black text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-gray-800 transition shadow-md">
+                Proceed To Checkout &rarr;
+              </button>
             </div>
-            <hr className="mb-6" />
-            <div className="flex justify-between mb-8">
-              <span className="font-bold text-lg">Total</span>
-              <span className="font-bold text-2xl">${totalPrice.toFixed(2)}</span>
-            </div>
-            <button className="w-full bg-black text-white py-4 rounded-xl font-bold hover:bg-gray-800 transition">
-              Proceed to Checkout
-            </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

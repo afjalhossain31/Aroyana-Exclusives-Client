@@ -17,9 +17,12 @@ export default function Navbar() {
       setIsLoggedIn(!!token);
 
       const userStr = localStorage.getItem("user");
+      let currentUser = null;
+
       if (userStr) {
         try {
-          setUserData(JSON.parse(userStr));
+          currentUser = JSON.parse(userStr);
+          setUserData(currentUser);
         } catch (e) {
           console.error("Error parsing user data");
         }
@@ -27,7 +30,9 @@ export default function Navbar() {
         setUserData(null);
       }
 
-      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      // ✨ প্রত্যেক ইউজারের জন্য আলাদা ইউনিক কার্ট কি (Key) লজিক
+      const cartKey = currentUser ? `cart_${currentUser.email}` : "guest_cart";
+      const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
       setCartCount(cart.length);
     };
 
