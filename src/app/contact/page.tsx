@@ -1,6 +1,6 @@
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-200">
       {/* Page Header */}
       <div className="bg-gray-50 py-16 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -81,7 +81,7 @@ export default function ContactPage() {
                 <textarea rows={5} placeholder="How can we help you today?" className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-black resize-none" required></textarea>
               </div>
 
-              <button type="button" className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition shadow-md">
+              <button type="button" className="w-full bg-secondary text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition shadow-md">
                 Submit Request
               </button>
             </form>

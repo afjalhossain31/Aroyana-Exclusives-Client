@@ -1,7 +1,19 @@
 import Link from 'next/link';
 import AddToCartButton from '@/components/cart/AddToCartButton';
-import BuyNowButton from '@/components/cart/BuyNowButton'; // <-- এটি যুক্ত করা হয়েছে
+import BuyNowButton from '@/components/cart/BuyNowButton'; 
 import ItemCard from '@/components/cards/ItemCard';
+
+// import type { Item } from "@/types/item";
+
+export interface Item {
+  _id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  shortDescription: string;
+  fullDescription?: string;
+  category?: string;
+}
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -10,9 +22,8 @@ interface PageProps {
 export default async function ItemDetailsPage({ params }: PageProps) {
   const { id } = await params;
 
-  // ১. নির্দিষ্ট প্রোডাক্টের ডাটা আনা
   const res = await fetch(`http://127.0.0.1:5000/api/items/${id}`, { cache: 'no-store' });
-  
+
   if (!res.ok) {
     return (
       <div className="text-center py-20 text-red-500 font-medium">
@@ -21,18 +32,20 @@ export default async function ItemDetailsPage({ params }: PageProps) {
     );
   }
 
-  const item = await res.json();
+  const item: Item = await res.json();
 
-  // ২. Related Items এর জন্য অন্যান্য প্রোডাক্টের ডাটা আনা
-  let relatedItems = [];
+  let relatedItems: Item[] = [];  // Initialize an empty array for related items
   try {
     const allRes = await fetch(`http://127.0.0.1:5000/api/items`, { cache: 'no-store' });
     if (allRes.ok) {
       const allData = await allRes.json();
-      const itemsArray = Array.isArray(allData) ? allData : allData.items || [];
-      // বর্তমান আইটেমটি বাদ দিয়ে বাকিগুলো থেকে ৪টি আইটেম নেওয়া হলো
-      relatedItems = itemsArray.filter((i: any) => i._id !== id).slice(0, 4);
+
+      const itemsArray: Item[] = Array.isArray(allData)
+        ? allData
+        : allData.items || [];
+      relatedItems = itemsArray.filter((i) => i._id !== id).slice(0, 4);
     }
+
   } catch (err) {
     console.error("Failed to fetch related items", err);
   }
@@ -41,20 +54,20 @@ export default async function ItemDetailsPage({ params }: PageProps) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Breadcrumb Navigation */}
       <nav className="text-sm text-gray-500 mb-8">
-        <Link href="/" className="hover:text-black transition">Home</Link> &gt; 
-        <Link href="/explore" className="hover:text-black mx-2 transition">Explore</Link> &gt; 
+        <Link href="/" className="hover:text-black transition">Home</Link> &gt;
+        <Link href="/explore" className="hover:text-black mx-2 transition">Explore</Link> &gt;
         <span className="text-black font-bold mx-2">{item.title}</span>
       </nav>
 
       {/* Product Top Section */}
       <div className="flex flex-col md:flex-row gap-12 mb-20">
-        
+
         {/* Left Side: Product Images (Multiple Media Support) */}
         <div className="w-full md:w-1/2 space-y-4">
           <div className="bg-gray-50 rounded-2xl overflow-hidden h-[500px] border border-gray-100 shadow-sm">
-            <img 
-              src={item.imageUrl} 
-              alt={item.title} 
+            <img
+              src={item.imageUrl}
+              alt={item.title}
               className="w-full h-full object-cover hover:scale-105 transition duration-500"
               suppressHydrationWarning
             />
@@ -76,9 +89,9 @@ export default async function ItemDetailsPage({ params }: PageProps) {
               {item.category || "Premium Collection"}
             </span>
           </div>
-          
+
           <h1 className="text-4xl font-black text-gray-900 mb-4 mt-4">{item.title}</h1>
-          
+
           <div className="flex items-center gap-4 mb-6">
             <span className="text-3xl font-extrabold text-gray-900">${item.price}</span>
             <span className="flex items-center text-gray-900 font-bold bg-gray-50 px-3 py-1 border border-gray-200 rounded-md shadow-sm">
@@ -93,7 +106,7 @@ export default async function ItemDetailsPage({ params }: PageProps) {
           {/* Action Buttons */}
           <div className="flex gap-4">
             <AddToCartButton item={item} />
-            
+
             {/* ডামি বাটনের বদলে আসল BuyNowButton বসানো হলো */}
             <BuyNowButton item={item} />
           </div>
@@ -103,7 +116,7 @@ export default async function ItemDetailsPage({ params }: PageProps) {
       {/* Separate Sections: Description, Specs, Reviews */}
       <div className="border-t border-gray-200 pt-16 mb-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          
+
           {/* Overview / Description */}
           <div className="md:col-span-2">
             <h3 className="text-2xl font-black text-gray-900 mb-6 uppercase tracking-tight">Product Overview</h3>
@@ -145,9 +158,9 @@ export default async function ItemDetailsPage({ params }: PageProps) {
               View All &rarr;
             </Link>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {relatedItems.map((relatedItem: any) => (
+            {relatedItems.map((relatedItem) =>  (
               <ItemCard key={relatedItem._id} item={relatedItem} />
             ))}
           </div>
