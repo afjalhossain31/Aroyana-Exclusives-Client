@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
-// Animations Variants
-const fadeInUp = {
+// Animations Variants (টাইপ এরর ফিক্স করা হয়েছে)
+const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeInOut" } }
 };
 
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
 };
@@ -17,14 +17,12 @@ const staggerContainer = {
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-light overflow-x-hidden">
-
+      
       {/* ১. Premium Hero with Gradient Accents */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-100 via-white to-neutral-100 border-b border-neutral-100">
-
-
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-50 via-white to-neutral-100 border-b border-neutral-100">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-neutral-500/25 via-transparent to-transparent opacity-60 pointer-events-none" />
 
-        <div className="relative z-20 text-center px-4 max-w-4xl space-y-6 mt-10">
+        <div className="relative z-20 text-center px-4 max-w-4xl space-y-6 mt-15">
           <motion.span
             initial={{ opacity: 0, letterSpacing: "0.1em" }}
             animate={{ opacity: 1, letterSpacing: "0.3em" }}
@@ -53,7 +51,7 @@ export default function AboutPage() {
       </section>
 
       {/* ২. Animated Statistics Section */}
-      <section className="border-b border-purple-200 bg-neutral-200 relative z-30 -mt-10 mx-4 md:mx-16 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] py-12 px-8">
+      <section className="border-b border-purple-200 bg-neutral-200 relative z-30 -mt-10 mx-4 md:mx-16 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] py-10 px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-neutral-100">
           {[
             { value: "100%", label: "Premium Fabrics" },
@@ -79,7 +77,6 @@ export default function AboutPage() {
       {/* ৩. Founder Section & Vision */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          {/* Image */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -95,7 +92,6 @@ export default function AboutPage() {
             />
           </motion.div>
 
-          {/* Text */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -132,19 +128,18 @@ export default function AboutPage() {
           <h2 className="text-3xl md:text-5xl font-black uppercase mt-2 text-neutral-900">The Aroyana Experience</h2>
         </div>
 
-        {/* Masonry-style Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="col-span-2 row-span-2 rounded-2xl overflow-hidden relative group">
             <img src="/afjal.png" alt="Gallery 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} delay={0.2} className="rounded-2xl overflow-hidden relative group">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="rounded-2xl overflow-hidden relative group">
             <img src="/avatar2.jpg" alt="Gallery 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} delay={0.3} className="rounded-2xl overflow-hidden relative group">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="rounded-2xl overflow-hidden relative group">
             <img src="/avatar1.jpg" alt="Gallery 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} delay={0.4} className="col-span-2 rounded-2xl overflow-hidden relative group">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="col-span-2 rounded-2xl overflow-hidden relative group">
             <img src="/afjal-hossain.png" alt="Gallery 4" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
           </motion.div>
         </div>
@@ -217,7 +212,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ৭. Sophisticated CTA (Call To Action) */}
+      {/* ৭. Sophisticated CTA */}
       <section className="relative py-20 text-center overflow-hidden bg-white">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-neutral-100 via-white to-white pointer-events-none" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 space-y-8">

@@ -49,7 +49,7 @@ export default function BlogPage() {
     <div className="min-h-screen bg-white text-gray-900 font-light selection:bg-black selection:text-white">
       
       {/* Blog Header */}
-      <div className="pt-20 pb-10 text-center border-b border-gray-100 bg-gradient-to-b from-gray-50/50 to-white">
+      <div className="pt-15 pb-10 text-center border-b border-gray-100 bg-gradient-to-b from-gray-50/50 to-white">
         <span className="text-xs font-bold uppercase tracking-[0.3em] text-gray-400 mb-4 block">
           The Official
         </span>

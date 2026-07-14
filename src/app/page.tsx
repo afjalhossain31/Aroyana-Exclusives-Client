@@ -5,7 +5,7 @@ import FeaturesGrid from '@/components/home/FeaturesGrid';
 import Testimonials from '@/components/home/Testimonials';
 import FAQSection from "@/components/home/FAQSection";
 import "remixicon/fonts/remixicon.css";
-
+import type { Item } from "@/types/item";
 import { motion } from "framer-motion";
 
 export default async function HomePage() {
@@ -23,7 +23,7 @@ export default async function HomePage() {
       const data = await res.json();
       // এখানে ডাটা চেক করছি যেন এরর না আসে
       const allItems = Array.isArray(data) ? data : (data.items ? data.items : []);
-      items = allItems.slice(0, 4);
+      items = allItems.slice(0, 8);
     }
   }
   catch (error) {
@@ -102,7 +102,7 @@ export default async function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {items.map((item: any, idx: number) => (
+            {items.map((item: Item, idx: number) => (
               <div key={item._id} className={`animate-fade-in-up delay-${(idx + 3) * 100}`}>
                 <ItemCard item={item} />
               </div>

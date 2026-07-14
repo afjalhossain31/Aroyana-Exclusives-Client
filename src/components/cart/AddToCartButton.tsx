@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import type { Item } from "@/types/item";
 
-export default function AddToCartButton({ item }: { item: any }) {
+export default function AddToCartButton({ item }: { item: Item }) {
   const router = useRouter();
 
   const handleAddToCart = () => {
