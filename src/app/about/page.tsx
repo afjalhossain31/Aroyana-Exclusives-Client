@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion, Variants } from "framer-motion";
 
-// Animations Variants (টাইপ এরর ফিক্স করা হয়েছে)
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeInOut" } }
@@ -18,9 +18,9 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-light overflow-x-hidden">
       
-      {/* ১. Premium Hero with Gradient Accents */}
+      {/* ১. Premium Hero */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-50 via-white to-neutral-100 border-b border-neutral-100">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-neutral-500/25 via-transparent to-transparent opacity-60 pointer-events-none" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-neutral-500/25 via-transparent to-transparent opacity-60 pointer-events-none" />
 
         <div className="relative z-20 text-center px-4 max-w-4xl space-y-6 mt-15">
           <motion.span
@@ -50,7 +50,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ২. Animated Statistics Section */}
+      {/* ২. Animated Statistics */}
       <section className="border-b border-purple-200 bg-neutral-200 relative z-30 -mt-10 mx-4 md:mx-16 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] py-10 px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-neutral-100">
           {[
@@ -85,10 +85,13 @@ export default function AboutPage() {
             className="relative h-[600px] rounded-3xl overflow-hidden shadow-2xl group"
           >
             <div className="absolute inset-0 bg-neutral-900/10 group-hover:bg-transparent transition-all duration-500 z-10" />
-            <img
+            <Image
               src="/afjal-hossain.png"
               alt="Afjal Hossain - Founder"
-              className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000 ease-out"
+              width={800}
+              height={1000}
+              priority
+              className="w-full h-full object-cover object-top scale-100 group-hover:scale-105 transition-transform duration-1000 ease-out"
             />
           </motion.div>
 
@@ -110,7 +113,7 @@ export default function AboutPage() {
             <motion.div variants={fadeInUp} className="relative">
               <span className="absolute -top-6 -left-4 text-6xl text-neutral-200 font-serif opacity-50">“</span>
               <p className="text-neutral-600 leading-loose text-lg md:text-xl font-light italic relative z-10 pl-6 border-l-2 border-amber-500">
-                True luxury is not just about being noticed, it's about being remembered. At Aroyana, we don't just create outfits; we craft unforgettable statements of identity for the modern generation.
+                True luxury is not just about being noticed, it is about being remembered. At Aroyana, we do not just create outfits; we craft unforgettable statements of identity for the modern generation.
               </p>
             </motion.div>
 
@@ -129,19 +132,24 @@ export default function AboutPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
+          
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="col-span-2 row-span-2 rounded-2xl overflow-hidden relative group">
-            <img src="/afjal.png" alt="Gallery 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/afjal.png" alt="Gallery 1" width={800} height={800} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </motion.div>
+          
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="rounded-2xl overflow-hidden relative group">
-            <img src="/avatar2.jpg" alt="Gallery 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/avatar2.jpg" alt="Gallery 2" width={500} height={500} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
           </motion.div>
+          
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="rounded-2xl overflow-hidden relative group">
-            <img src="/avatar1.jpg" alt="Gallery 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/avatar1.jpg" alt="Gallery 3" width={500} height={500} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
           </motion.div>
+          
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="col-span-2 rounded-2xl overflow-hidden relative group">
-            <img src="/afjal-hossain.png" alt="Gallery 4" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/afjal-hossain.png" alt="Gallery 4" width={800} height={500} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" />
           </motion.div>
+          
         </div>
       </section>
 
@@ -214,7 +222,7 @@ export default function AboutPage() {
 
       {/* ৭. Sophisticated CTA */}
       <section className="relative py-20 text-center overflow-hidden bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-neutral-100 via-white to-white pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,var(--tw-gradient-stops))] from-neutral-100 via-white to-white pointer-events-none" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 space-y-8">
           <h3 className="text-3xl md:text-5xl font-black text-neutral-900 uppercase tracking-wider">
             Experience True Luxury

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from 'next-themes';
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
         suppressHydrationWarning={true} // <--- ঠিক এই লাইনটি এখানে থাকতে হবে!
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Toaster position="top-right" />
           <Navbar />
           
           {/* flex-grow যোগ করা হলো যাতে এই অংশটি পুরো ফাঁকা জায়গা নিয়ে নেয় */}

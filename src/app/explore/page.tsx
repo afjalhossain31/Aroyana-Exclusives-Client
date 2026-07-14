@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import ItemCard from "@/components/cards/ItemCard";
 import type { Item } from "@/types/item";
+import toast from 'react-hot-toast';
 
 export default function ExplorePage() {
   const [items, setItems] = useState<Item[]>([]);
@@ -26,6 +27,7 @@ export default function ExplorePage() {
         
       } catch (err) {
         console.error("Error fetching items:", err);
+        toast.error("Failed to fetch items.");// new
         setItems([]); 
       } finally {
         setLoading(false);

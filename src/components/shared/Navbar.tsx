@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import toast from 'react-hot-toast';
+// import type { Item } from "@/types/item";
 
 export default function Navbar() {
+
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,7 +33,6 @@ export default function Navbar() {
         setUserData(null);
       }
 
-      // ✨ প্রত্যেক ইউজারের জন্য আলাদা ইউনিক কার্ট কি (Key) লজিক
       const cartKey = currentUser ? `cart_${currentUser.email}` : "guest_cart";
       const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
       setCartCount(cart.length);
@@ -46,6 +48,38 @@ export default function Navbar() {
     };
   }, []);
 
+
+  // কার্ট প্রটেকশন হ্যান্ডলার
+  const handleCartClick = (e: React.MouseEvent) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+
+      toast((t) => (
+        <div className="flex items-center justify-between w-full gap-4">
+          <span className="text-sm font-medium">Please sign in to access your cart.</span>
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="text-gray-400 hover:text-white transition-colors p-1"
+          >
+            ✕
+          </button>
+        </div>
+      ), {
+        style: {
+          borderRadius: '10px',
+          background: '#000',
+          color: '#fff',
+          padding: '12px 16px',
+        },
+      });
+
+      router.push("/login");
+    } else {
+      router.push("/cart");
+    }
+  };
+
+
   const userInitial = userData?.name
     ? userData.name.charAt(0).toUpperCase()
     : (userData?.email ? userData.email.charAt(0).toUpperCase() : "U");
@@ -58,65 +92,24 @@ export default function Navbar() {
         <div className="flex justify-between h-20 items-center">
 
           {/* Logo */}
-
           <Link href="/" className="flex-shrink-0 flex flex-col leading-none">
             <h1 className="text-3xl font-black tracking-[0.18em] uppercase">
-              <span className="bg-gradient-to-r from-violet-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent">
-                Aroyana
-              </span>
+              <span className="bg-gradient-to-r from-violet-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent">Aroyana</span>
             </h1>
-
-            <span className="mt-1 text-[10px] tracking-[0.45em] uppercase text-gray-400 font-semibold">
-              EXCLUSIVES
-            </span>
-
+            <span className="mt-1 text-[10px] tracking-[0.45em] uppercase text-gray-400 font-semibold">EXCLUSIVES</span>
           </Link>
 
-
-          {/* Desktop Menu - Common Links including Blog */}
+          {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-3">
-
-            <Link
-              href="/"
-              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
-            >
-              Home
-            </Link>
-
-            <Link
-              href="/explore"
-              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
-            >
-              Explore
-            </Link>
-
-            <Link
-              href="/blog"
-              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
-            >
-              Blog
-            </Link>
-
-            <Link
-              href="/about"
-              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
-            >
-              About
-            </Link>
-
-            <Link
-              href="/contact"
-              className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 hover:text-black transition-all duration-300"
-            >
-              Contact
-            </Link>
-
+            <Link href="/" className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 transition-all">Home</Link>
+            <Link href="/explore" className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 transition-all">Explore</Link>
+            <Link href="/blog" className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 transition-all">Blog</Link>
+            <Link href="/about" className="px-5 py-2.5 rounded-full text-sm font-semibold text-gray-600 hover:bg-neutral-200 transition-all">About</Link>
           </div>
 
-
-          {/* User Actions (Cart, Profile/Login) */}
+          {/* User Actions */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/cart" className="relative text-gray-900 hover:text-gray-600 transition">
+            <Link href="/cart" onClick={handleCartClick} className="relative text-gray-900 hover:text-gray-600 transition">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
@@ -129,15 +122,15 @@ export default function Navbar() {
 
             {isLoggedIn ? (
               <Link href="/profile" className="flex items-center gap-2 group border-l border-gray-200 pl-6">
-                <div className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-black text-gray-900 group-hover:bg-black group-hover:text-white transition-all">
+                <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-sm font-black text-gray-900 group-hover:bg-black group-hover:text-white transition-all">
                   {userInitial}
                 </div>
-                <span className="text-sm font-bold text-gray-700 group-hover:text-black transition max-w-[100px] truncate hidden lg:block">
+                <span className="text-sm font-bold text-gray-700 group-hover:text-black transition max-w-[150px] truncate">
                   {displayName}
                 </span>
               </Link>
             ) : (
-              <Link href="/login" className="bg-black text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-800 transition shadow-sm">
+              <Link href="/login" className="bg-black text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-800 transition">
                 Sign In
               </Link>
             )}
@@ -145,57 +138,19 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4">
-            <Link href="/cart" className="relative text-gray-900">
+            <Link href="/cart" onClick={handleCartClick} className="relative text-gray-900">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-black text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
             </Link>
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-900 hover:text-gray-600 focus:outline-none"
-            >
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-gray-900">
               <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
+                {isMenuOpen ? <path d="M6 18L18 6M6 6l12 12" /> : <path d="M4 6h16M4 12h16M4 18h16" />}
               </svg>
             </button>
           </div>
         </div>
       </div>
-
-      {/* Mobile Menu Dropdown */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-6 space-y-1 shadow-lg absolute w-full">
-          <Link href="/" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Home</Link>
-          <Link href="/explore" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Explore</Link>
-          <Link href="/blog" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Blog</Link>
-          <Link href="/about" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>About</Link>
-          <Link href="/contact" className="block px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>Contact</Link>
-
-          <div className="pt-4 border-t border-gray-100 mt-2">
-            {isLoggedIn ? (
-              <Link href="/profile" className="flex items-center gap-3 px-3 py-3 rounded-md text-base font-bold text-gray-900 hover:bg-gray-50" onClick={() => setIsMenuOpen(false)}>
-                <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-sm font-black">
-                  {userInitial}
-                </div>
-                <span>My Profile</span>
-              </Link>
-            ) : (
-              <Link href="/login" className="block w-full text-center bg-black text-white px-5 py-3 rounded-lg text-base font-bold hover:bg-gray-800 transition" onClick={() => setIsMenuOpen(false)}>
-                Sign In
-              </Link>
-            )}
-          </div>
-        </div>
-      )}
     </nav>
   );
 }
