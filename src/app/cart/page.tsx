@@ -10,7 +10,7 @@ export default function CartPage() {
   useEffect(() => {
     const userStr = localStorage.getItem("user");
     const currentUser = userStr ? JSON.parse(userStr) : null;
-    
+
     // ডাইনামিক কি সেটআপ
     const activeKey = currentUser ? `cart_${currentUser.email}` : "guest_cart";
     setCartKey(activeKey);
@@ -27,6 +27,31 @@ export default function CartPage() {
   };
 
   const totalPrice = cartItems.reduce((total, item) => total + (Number(item.price) || 0), 0);
+
+  const handleCheckout = async () => {
+    if (cartItems.length === 0) return;
+
+    try {
+      const res = await fetch("http://localhost:5000/api/payment/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items: cartItems }), // কার্টের আইটেমগুলো ব্যাকএন্ডে পাঠানো হচ্ছে
+      });
+
+      const data = await res.json();
+
+      if (data.url) {
+        // Stripe-এর পেমেন্ট পেজে রিডাইরেক্ট করা
+        window.location.href = data.url;
+      } else {
+        alert("Payment session creation failed!");
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -70,9 +95,14 @@ export default function CartPage() {
                 <span className="text-gray-400 text-xs font-bold uppercase tracking-widest">Total Balance</span>
                 <h2 className="text-2xl font-black text-gray-900 mt-1">${totalPrice.toFixed(2)}</h2>
               </div>
-              <button className="w-full sm:w-auto bg-black text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-gray-800 transition shadow-md">
+
+              <button
+                onClick={handleCheckout}
+                className="w-full sm:w-auto bg-black text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-gray-800 transition shadow-md"
+              >
                 Proceed To Checkout &rarr;
               </button>
+
             </div>
           </div>
         )}
