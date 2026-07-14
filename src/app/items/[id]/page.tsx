@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import AddToCartButton from '@/components/cart/AddToCartButton';
+import BuyNowButton from '@/components/cart/BuyNowButton'; // <-- এটি যুক্ত করা হয়েছে
 import ItemCard from '@/components/cards/ItemCard';
 
 interface PageProps {
@@ -29,7 +30,7 @@ export default async function ItemDetailsPage({ params }: PageProps) {
     if (allRes.ok) {
       const allData = await allRes.json();
       const itemsArray = Array.isArray(allData) ? allData : allData.items || [];
-      // বর্তমান আইটেমটি বাদ দিয়ে বাকিগুলো থেকে ৪টি আইটেম নেওয়া হলো
+      // বর্তমান আইটেমটি বাদ দিয়ে বাকিগুলো থেকে ৪টি আইটেম নেওয়া হলো
       relatedItems = itemsArray.filter((i: any) => i._id !== id).slice(0, 4);
     }
   } catch (err) {
@@ -92,9 +93,9 @@ export default async function ItemDetailsPage({ params }: PageProps) {
           {/* Action Buttons */}
           <div className="flex gap-4">
             <AddToCartButton item={item} />
-            <button className="flex-1 border-2 border-gray-900 text-gray-900 py-4 rounded-lg hover:bg-gray-900 hover:text-white transition text-lg font-bold">
-              Buy Now
-            </button>
+            
+            {/* ডামি বাটনের বদলে আসল BuyNowButton বসানো হলো */}
+            <BuyNowButton item={item} />
           </div>
         </div>
       </div>
