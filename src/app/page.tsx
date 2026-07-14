@@ -7,6 +7,7 @@ import FAQSection from "@/components/home/FAQSection";
 import "remixicon/fonts/remixicon.css";
 import type { Item } from "@/types/item";
 import { motion } from "framer-motion";
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   let items = [];

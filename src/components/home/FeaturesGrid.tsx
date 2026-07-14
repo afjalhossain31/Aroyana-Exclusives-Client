@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
+import type { Item } from "@/types/item";
 
 export default function FeaturesGrid() {
   const boxes = [
@@ -26,7 +27,7 @@ export default function FeaturesGrid() {
     },
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -34,13 +35,13 @@ export default function FeaturesGrid() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 50, scale: 0.9 },
     visible: { 
       opacity: 1, 
       y: 0, 
       scale: 1, 
-      transition: { duration: 0.6, ease: "easeOut" } 
+      transition: { duration: 0.6, ease: "easeOut" as any }  
     },
   };
 
