@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import type { Item } from "@/types/item";
 
 export default function ManageItemsPage() {
   const router = useRouter();
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchUserItems = async () => {
@@ -41,7 +42,8 @@ export default function ManageItemsPage() {
     if (!confirm("Are you sure you want to permanently delete this masterpiece?")) return;
 
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/items/${id}`, {
+      // 🎯 এখানেই পরিবর্তন করা হয়েছে: '/delete/' যোগ করা হয়েছে
+      const res = await fetch(`http://127.0.0.1:5000/api/items/delete/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -56,6 +58,7 @@ export default function ManageItemsPage() {
       }
     } catch (err) {
       console.error(err);
+      alert("Failed to delete product. Please try again.");
     }
   };
 

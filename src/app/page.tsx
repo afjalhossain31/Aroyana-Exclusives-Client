@@ -11,14 +11,22 @@ import { motion } from "framer-motion";
 export default async function HomePage() {
   let items = [];
 
+  // try {
+  //   const res = await fetch('http://127.0.0.1:5000/api/items', { cache: 'no-store' });
+
   try {
-    const res = await fetch('http://127.0.0.1:5000/api/items', { cache: 'no-store' });
+    const res = await fetch('http://127.0.0.1:5000/api/items', {
+      cache: 'no-store', // রিয়েল-টাইম ডাটা পাওয়ার জন্য
+    });
+
     if (res.ok) {
       const data = await res.json();
-      const allItems = Array.isArray(data) ? data : data.items || [];
+      // এখানে ডাটা চেক করছি যেন এরর না আসে
+      const allItems = Array.isArray(data) ? data : (data.items ? data.items : []);
       items = allItems.slice(0, 4);
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Failed to fetch home page items:", error);
   }
 

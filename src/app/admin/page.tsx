@@ -1,165 +1,173 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function AdminDashboard() {
-  const router = useRouter();
-  const [totalProducts, setTotalProducts] = useState(0);
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    totalOrders: 0,
+    chartData: [
+      { name: "Mon", revenue: 0 },
+      { name: "Tue", revenue: 0 },
+      { name: "Wed", revenue: 0 },
+      { name: "Thu", revenue: 0 },
+      { name: "Fri", revenue: 0 },
+      { name: "Sat", revenue: 0 },
+      { name: "Sun", revenue: 0 },
+    ]
+  });
   const [loading, setLoading] = useState(true);
-  const [adminName, setAdminName] = useState("Admin");
 
+  // ব্যাকএন্ড থেকে আসল ডাটা ফেচ করা
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
-
-    // প্রটেকশন চেক: লগইন না থাকলে লগইন পেজে পাঠাবে
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setAdminName(parsedUser.name || "Admin");
-        
-        // যদি ব্যাকএন্ডে role ম্যানেজমেন্ট থাকে, তবে নিচের কোডটি আনকমেন্ট করতে পারো:
-        // if (parsedUser.role !== "admin") {
-        //   alert("Access denied! Admins only.");
-        //   router.push("/");
-        //   return;
-        // }
-      } catch (e) {
-        console.error("Error parsing user data");
-      }
-    }
-
-    // ডাটাবেজ থেকে মোট প্রোডাক্টের সংখ্যা আনা (ড্যাশবোর্ডে দেখানোর জন্য)
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:5000/api/items", { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          const itemsArray = Array.isArray(data) ? data : data.items || [];
-          setTotalProducts(itemsArray.length);
+        const res = await fetch("http://localhost:5000/api/analytics/stats");
+        const data = await res.json();
+        if (data.success) {
+          setStats({
+            totalRevenue: data.totalRevenue,
+            totalOrders: data.totalOrders,
+            chartData: data.chartData
+          });
         }
-      } catch (err) {
-        console.error("Failed to fetch admin stats", err);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchStats();
-  }, [router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-pulse text-gray-400 font-bold uppercase tracking-widest">
-          Loading Control Panel...
-        </div>
-      </div>
-    );
-  }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Dashboard Header */}
-        <div className="mb-10 border-b border-gray-200 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="min-h-screen bg-[#F8F9FA] flex flex-col md:flex-row">
+      
+      {/* Sidebar */}
+      <aside className="w-full md:w-64 bg-white border-r border-gray-100 flex-shrink-0">
+        <div className="p-6">
+          <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">Aroyana</h2>
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Admin Panel</p>
+        </div>
+        <nav className="mt-6 px-4 space-y-2">
+          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 bg-black text-white rounded-xl font-bold text-sm shadow-md">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            Dashboard
+          </Link>
+          <Link href="/add-item" className="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-bold text-sm transition">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+            Add New Product
+          </Link>
+          <Link href="/items/manage" className="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-bold text-sm transition">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+            Inventory
+          </Link>
+          <Link href="/profile" className="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 hover:text-gray-900 rounded-xl font-bold text-sm transition mt-10 border-t border-gray-100 pt-6">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Profile
+          </Link>
+        </nav>
+      </aside>
+
+      {/* Main Dashboard Content */}
+      <main className="flex-1 p-8 sm:p-12 overflow-y-auto">
+        <div className="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Admin Control Center</h1>
-            <p className="text-gray-500 mt-1">Welcome back, {adminName}. Manage your brand boutique operations.</p>
+            <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Overview</h1>
+            <p className="text-gray-500 text-sm mt-1">Monitor your store's performance and inventory.</p>
           </div>
-          <span className="bg-black text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-            System Online
-          </span>
-        </div>
-
-        {/* Quick Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           
-          {/* Card 1: Total Products */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-            <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Inventory</p>
-              <h3 className="text-3xl font-black text-gray-900 mt-2">{totalProducts} Products</h3>
-            </div>
-            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-xl border border-gray-100">
-              📦
-            </div>
-          </div>
-
-          {/* Card 2: Total Orders (Dummy Stats for Premium Look) */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-            <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Pending Orders</p>
-              <h3 className="text-3xl font-black text-gray-900 mt-2">12 Orders</h3>
-            </div>
-            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-xl border border-gray-100">
-              🛍️
-            </div>
-          </div>
-
-          {/* Card 3: Total Revenue */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-            <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Gross Revenue</p>
-              <h3 className="text-3xl font-black text-gray-900 mt-2">$2,450</h3>
-            </div>
-            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-xl border border-gray-100">
-              💰
-            </div>
-          </div>
-
-        </div>
-
-        {/* Administrative Action Shortcuts */}
-        <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-          <h2 className="text-xl font-black text-gray-900 uppercase tracking-wide mb-6 border-b border-gray-100 pb-4">
-            Management Tools
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            {/* Tool 1: Manage Items */}
-            <div className="border border-gray-200 rounded-2xl p-6 hover:border-gray-900 transition flex flex-col justify-between">
-              <div>
-                <h4 className="font-bold text-gray-900 text-lg uppercase tracking-tight">Product Inventory Table</h4>
-                <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-                  Review the deployed product list, inspect active items, or permanently remove assets from the storefront grid.
-                </p>
-              </div>
-              <div className="mt-6">
-                <Link href="/items/manage" className="inline-block bg-black text-white px-5 py-3 rounded-xl text-sm font-bold hover:bg-gray-800 transition">
-                  Open Inventory &rarr;
-                </Link>
-              </div>
-            </div>
-
-            {/* Tool 2: Add Item */}
-            <div className="border border-gray-200 rounded-2xl p-6 hover:border-gray-900 transition flex flex-col justify-between">
-              <div>
-                <h4 className="font-bold text-gray-900 text-lg uppercase tracking-tight">Deploy New Artifact</h4>
-                <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-                  Upload new luxury garments, specify customized descriptions, tag categories, and insert pricing matrix properties.
-                </p>
-              </div>
-              <div className="mt-6">
-                <Link href="/add-item" className="inline-block border-2 border-gray-900 text-gray-900 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-gray-900 hover:text-white transition">
-                  + Add New Product
-                </Link>
-              </div>
-            </div>
-
+          <div className="flex gap-4">
+            <Link href="/items/manage" className="bg-white border border-gray-200 text-gray-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-50 transition shadow-sm">
+              Open Inventory
+            </Link>
+            <Link href="/add-item" className="bg-black text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-800 transition shadow-md flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+              Add Product
+            </Link>
           </div>
         </div>
 
-      </div>
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="w-8 h-8 border-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <>
+            {/* Top Metrics Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+              <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_2px_20px_rgb(0,0,0,0.02)]">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center text-amber-600">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                </div>
+                <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total Revenue</p>
+                <h3 className="text-3xl font-black text-gray-900">${stats.totalRevenue.toLocaleString()}</h3>
+              </div>
+              
+              <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_2px_20px_rgb(0,0,0,0.02)]">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                  </div>
+                </div>
+                <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total Orders</p>
+                <h3 className="text-3xl font-black text-gray-900">{stats.totalOrders}</h3>
+              </div>
+
+              <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_2px_20px_rgb(0,0,0,0.02)]">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                  </div>
+                </div>
+                <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Active Status</p>
+                <h3 className="text-3xl font-black text-emerald-500">Online</h3>
+              </div>
+            </div>
+
+            {/* Recharts Section */}
+            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-[0_2px_20px_rgb(0,0,0,0.02)]">
+              <div className="mb-6">
+                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Revenue Analytics</h3>
+                <p className="text-sm text-gray-500 mt-1">Real-time performance of sales based on your database.</p>
+              </div>
+              
+              <div className="w-full h-[400px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={stats.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#000000" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#000000" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
+                    <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#111827', borderRadius: '12px', color: '#fff', border: 'none' }}
+                      itemStyle={{ color: '#fff' }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="revenue" 
+                      stroke="#000000" 
+                      strokeWidth={3} 
+                      fillOpacity={1} 
+                      fill="url(#colorRevenue)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </>
+        )}
+      </main>
     </div>
   );
 }

@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import ItemCard from "@/components/cards/ItemCard";
+import type { Item } from "@/types/item";
 
 export default function ExplorePage() {
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   
   // সার্চ, ফিল্টার ও সর্টিং স্টেটসমূহ
@@ -17,16 +18,15 @@ export default function ExplorePage() {
     const fetchItems = async () => {
       setLoading(true);
       try {
-        const res = await fetch("http://127.0.0.1:5000/api/items", { cache: "no-store" });
+        const res = await fetch(`http://127.0.0.1:5000/api/items`, { cache: "no-store" });
         const data = await res.json();
         
-        // ফিক্স: ডাটা সরাসরি অ্যারে না হলে data.items থেকে অ্যারেটি বের করে নেবে
         const itemsArray = Array.isArray(data) ? data : data.items || [];
         setItems(itemsArray);
         
       } catch (err) {
         console.error("Error fetching items:", err);
-        setItems([]); // এরর হলে খালি অ্যারে সেট করবে যাতে ম্যাপ বা ফিল্টার ক্র্যাশ না করে
+        setItems([]); 
       } finally {
         setLoading(false);
       }
@@ -34,22 +34,30 @@ export default function ExplorePage() {
     fetchItems();
   }, []);
 
-  // ক্লায়েন্ট সাইড ফিল্টারিং এবং সর্টিং লজিক
+  // 🎯 ক্র্যাশ-প্রুফ ফিল্টারিং এবং সর্টিং লজিক
   const filteredItems = items
     .filter((item) => {
-      const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = category === "All" || item.category === category;
+      const safeTitle = item.title || "";
+      const matchesSearch = safeTitle.toLowerCase().includes(search.toLowerCase());
+      
+      const safeCategory = item.category || "";
+      const matchesCategory = category === "All" || safeCategory === category;
       
       let matchesPrice = true;
-      if (priceRange === "under-50") matchesPrice = item.price < 50;
-      else if (priceRange === "50-150") matchesPrice = item.price >= 50 && item.price <= 150;
-      else if (priceRange === "over-150") matchesPrice = item.price > 150;
+      const safePrice = item.price || 0; // প্রাইস না থাকলে ০ ধরবে
+
+      if (priceRange === "under-50") matchesPrice = safePrice < 50;
+      else if (priceRange === "50-150") matchesPrice = safePrice >= 50 && safePrice <= 150;
+      else if (priceRange === "over-150") matchesPrice = safePrice > 150;
 
       return matchesSearch && matchesCategory && matchesPrice;
     })
     .sort((a, b) => {
-      if (sortBy === "price-low") return a.price - b.price;
-      if (sortBy === "price-high") return b.price - a.price;
+      const priceA = a.price || 0;
+      const priceB = b.price || 0;
+
+      if (sortBy === "price-low") return priceA - priceB;
+      if (sortBy === "price-high") return priceB - priceA;
       return 0;
     });
 
