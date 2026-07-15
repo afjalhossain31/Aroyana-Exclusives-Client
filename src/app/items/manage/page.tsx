@@ -13,17 +13,16 @@ export default function ManageItemsPage() {
   const fetchUserItems = async () => {
     setLoading(true);
     try {
-      // ব্যাকএন্ড থেকে সব আইটেম রিড করা
-      const res = await fetch("http://127.0.0.1:5000/api/items", { cache: "no-store" });
+      // backend to fetch user-specific items
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/items`, { cache: "no-store" });
       const data = await res.json();
       
-      // ফিক্স: ডাটা সরাসরি অ্যারে না হলে data.items থেকে অ্যারেটি বের করে নেবে
       const itemsArray = Array.isArray(data) ? data : data.items || [];
       setItems(itemsArray);
       
     } catch (err) {
       console.error(err);
-      setItems([]); // এরর হলে খালি অ্যারে সেট করবে
+      setItems([]); 
     } finally {
       setLoading(false);
     }
@@ -42,8 +41,8 @@ export default function ManageItemsPage() {
     if (!confirm("Are you sure you want to permanently delete this masterpiece?")) return;
 
     try {
-      // 🎯 এখানেই পরিবর্তন করা হয়েছে: '/delete/' যোগ করা হয়েছে
-      const res = await fetch(`http://127.0.0.1:5000/api/items/delete/${id}`, {
+      // delete request to backend
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/items/delete/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

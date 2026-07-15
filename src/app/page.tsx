@@ -12,17 +12,14 @@ export const dynamic = 'force-dynamic';
 export default async function HomePage() {
   let items = [];
 
-  // try {
-  //   const res = await fetch('http://127.0.0.1:5000/api/items', { cache: 'no-store' });
-
   try {
-    const res = await fetch('http://127.0.0.1:5000/api/items', {
-      cache: 'no-store', // রিয়েল-টাইম ডাটা পাওয়ার জন্য
+    const res = await fetch('${process.env.NEXT_PUBLIC_SERVER_URL}/api/items', {
+      cache: 'no-store', 
     });
 
     if (res.ok) {
       const data = await res.json();
-      // এখানে ডাটা চেক করছি যেন এরর না আসে
+      // Ensure we have an array of items, even if the response structure is unexpected
       const allItems = Array.isArray(data) ? data : (data.items ? data.items : []);
       items = allItems.slice(0, 8);
     }

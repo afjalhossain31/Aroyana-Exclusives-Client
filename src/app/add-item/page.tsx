@@ -32,7 +32,7 @@ export default function AddItemPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`http://127.0.0.1:5000/api/items/add`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/items/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
