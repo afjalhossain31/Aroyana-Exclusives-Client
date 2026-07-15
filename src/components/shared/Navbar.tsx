@@ -49,7 +49,7 @@ export default function Navbar() {
   }, []);
 
 
-  // কার্ট প্রটেকশন হ্যান্ডলার
+  // Cart click handler with toast notification for unauthenticated users
   const handleCartClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {
       e.preventDefault();

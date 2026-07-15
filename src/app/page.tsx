@@ -13,7 +13,7 @@ export default async function HomePage() {
   let items = [];
 
   try {
-    const res = await fetch('${process.env.NEXT_PUBLIC_SERVER_URL}/api/items', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/items`, {
       cache: 'no-store', 
     });
 

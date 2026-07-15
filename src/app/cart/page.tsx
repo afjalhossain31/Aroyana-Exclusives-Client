@@ -11,7 +11,6 @@ export default function CartPage() {
     const userStr = localStorage.getItem("user");
     const currentUser = userStr ? JSON.parse(userStr) : null;
 
-    // ডাইনামিক কি সেটআপ
     const activeKey = currentUser ? `cart_${currentUser.email}` : "guest_cart";
     setCartKey(activeKey);
 

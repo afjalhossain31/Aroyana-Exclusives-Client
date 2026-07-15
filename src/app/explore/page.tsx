@@ -8,8 +8,7 @@ import toast from 'react-hot-toast';
 export default function ExplorePage() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  // সার্চ, ফিল্টার ও সর্টিং স্টেটসমূহ
+
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [priceRange, setPriceRange] = useState("all");
@@ -21,14 +20,14 @@ export default function ExplorePage() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/items`, { cache: "no-store" });
         const data = await res.json();
-        
+
         const itemsArray = Array.isArray(data) ? data : data.items || [];
         setItems(itemsArray);
-        
+
       } catch (err) {
         console.error("Error fetching items:", err);
         toast.error("Failed to fetch items.");// new
-        setItems([]); 
+        setItems([]);
       } finally {
         setLoading(false);
       }
@@ -36,15 +35,15 @@ export default function ExplorePage() {
     fetchItems();
   }, []);
 
-  // 🎯 ক্র্যাশ-প্রুফ ফিল্টারিং এবং সর্টিং লজিক
+  // ক্র্যাশ-প্রুফ ফিল্টারিং এবং সর্টিং লজিক
   const filteredItems = items
     .filter((item) => {
       const safeTitle = item.title || "";
       const matchesSearch = safeTitle.toLowerCase().includes(search.toLowerCase());
-      
+
       const safeCategory = item.category || "";
       const matchesCategory = category === "All" || safeCategory === category;
-      
+
       let matchesPrice = true;
       const safePrice = item.price || 0; // প্রাইস না থাকলে ০ ধরবে
 

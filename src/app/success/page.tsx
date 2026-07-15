@@ -4,13 +4,12 @@ import { useEffect } from "react";
 import Link from "next/link";
 
 export default function SuccessPage() {
-  // পেমেন্ট সফল হওয়ার পর লোকাল স্টোরেজের কার্ট ক্লিয়ার করার জন্য (অপশনাল কিন্তু প্রফেশনাল)
+ // payment success 
   useEffect(() => {
     const userStr = localStorage.getItem("user");
     const currentUser = userStr ? JSON.parse(userStr) : null;
     const cartKey = currentUser ? `cart_${currentUser.email}` : "guest_cart";
     
-    // কার্ট খালি করা এবং ন্যাভবার আপডেট করা
     localStorage.removeItem(cartKey);
     window.dispatchEvent(new Event("cartChange"));
   }, []);

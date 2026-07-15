@@ -25,7 +25,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/login", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -46,7 +46,6 @@ export default function LoginPage() {
         window.dispatchEvent(new Event("authChange"));
         // ------------------------------------
 
-        // দেড় সেকেন্ড পর হোম পেজে পাঠিয়ে দেবে
         setTimeout(() => {
           router.push("/");
         }, 1500);
@@ -58,7 +57,6 @@ export default function LoginPage() {
     }
   };
 
-  // সোশ্যাল লগইনের ডামি ফাংশন (পরে লজিক বসানোর জন্য)
   const handleSocialLogin = (provider: string) => {
     console.log(`Connecting to ${provider}...`);
     // TODO: Add backend logic here later
