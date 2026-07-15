@@ -34,7 +34,7 @@ export default function BuyNowButton({ item }: BuyNowButtonProps) {
                 quantity: 1
             };
 
-            const res = await fetch("/api/payment/create-checkout-session", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payment/create-checkout-session`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
