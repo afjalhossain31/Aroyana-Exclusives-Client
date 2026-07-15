@@ -4,10 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from 'react-hot-toast';
-// import type { Item } from "@/types/item";
 
 export default function Navbar() {
-
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,37 +46,22 @@ export default function Navbar() {
     };
   }, []);
 
-
-  // Cart click handler with toast notification for unauthenticated users
   const handleCartClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {
       e.preventDefault();
-
       toast((t) => (
         <div className="flex items-center justify-between w-full gap-4">
           <span className="text-sm font-medium">Please sign in to access your cart.</span>
-          <button
-            onClick={() => toast.dismiss(t.id)}
-            className="text-gray-400 hover:text-white transition-colors p-1"
-          >
-            ✕
-          </button>
+          <button onClick={() => toast.dismiss(t.id)} className="text-gray-400 hover:text-white transition-colors p-1">✕</button>
         </div>
       ), {
-        style: {
-          borderRadius: '10px',
-          background: '#000',
-          color: '#fff',
-          padding: '12px 16px',
-        },
+        style: { borderRadius: '10px', background: '#000', color: '#fff', padding: '12px 16px' },
       });
-
       router.push("/login");
     } else {
       router.push("/cart");
     }
   };
-
 
   const userInitial = userData?.name
     ? userData.name.charAt(0).toUpperCase()
@@ -90,7 +73,6 @@ export default function Navbar() {
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex flex-col leading-none">
             <h1 className="text-3xl font-black tracking-[0.18em] uppercase">
@@ -151,6 +133,44 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu List with Profile & Logout */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white border-b border-gray-100 py-4 px-4 shadow-lg">
+          <div className="flex flex-col gap-1">
+            <Link href="/" onClick={() => setIsMenuOpen(false)} className="px-4 py-4 text-base font-bold text-gray-900 rounded-xl hover:bg-gray-100 hover:pl-6 transition-all duration-300">Home</Link>
+            <Link href="/explore" onClick={() => setIsMenuOpen(false)} className="px-4 py-4 text-base font-bold text-gray-900 rounded-xl hover:bg-gray-100 hover:pl-6 transition-all duration-300">Explore</Link>
+            <Link href="/blog" onClick={() => setIsMenuOpen(false)} className="px-4 py-4 text-base font-bold text-gray-900 rounded-xl hover:bg-gray-100 hover:pl-6 transition-all duration-300">Blog</Link>
+            <Link href="/about" onClick={() => setIsMenuOpen(false)} className="px-4 py-4 text-base font-bold text-gray-900 rounded-xl hover:bg-gray-100 hover:pl-6 transition-all duration-300">About</Link>
+            
+            <div className="my-2 border-t border-gray-100"></div>
+
+            {isLoggedIn ? (
+              <>
+                <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="px-4 py-4 text-base font-bold text-violet-600 rounded-xl hover:bg-gray-100 hover:pl-6 transition-all duration-300">
+                  My Profile
+                </Link>
+                <button 
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    setIsMenuOpen(false);
+                    window.dispatchEvent(new Event("authChange"));
+                    router.push("/login");
+                  }}
+                  className="px-4 py-4 text-base font-bold text-red-600 rounded-xl hover:bg-red-50 hover:pl-6 transition-all duration-300 text-left"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link href="/login" onClick={() => setIsMenuOpen(false)} className="px-4 py-4 text-base font-bold text-white bg-black rounded-xl text-center mt-2">
+                Sign In
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
