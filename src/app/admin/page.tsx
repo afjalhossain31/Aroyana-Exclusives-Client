@@ -20,11 +20,11 @@ export default function AdminDashboard() {
   });
   const [loading, setLoading] = useState(true);
 
-  // ব্যাকএন্ড থেকে আসল ডাটা ফেচ করা
+  // Fetch dashboard stats from the backend API
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/analytics/stats");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/analytics/stats`);
         const data = await res.json();
         if (data.success) {
           setStats({
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col md:flex-row">
-      
+
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-white border-r border-gray-100 flex-shrink-0">
         <div className="p-6">
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
             <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tight">Overview</h1>
             <p className="text-gray-500 text-sm mt-1">Monitor your store's performance and inventory.</p>
           </div>
-          
+
           <div className="flex gap-4">
             <Link href="/items/manage" className="bg-white border border-gray-200 text-gray-900 px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-50 transition shadow-sm">
               Open Inventory
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
                 <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total Revenue</p>
                 <h3 className="text-3xl font-black text-gray-900">${stats.totalRevenue.toLocaleString()}</h3>
               </div>
-              
+
               <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_2px_20px_rgb(0,0,0,0.02)]">
                 <div className="flex justify-between items-start mb-4">
                   <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
@@ -136,30 +136,30 @@ export default function AdminDashboard() {
                 <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Revenue Analytics</h3>
                 <p className="text-sm text-gray-500 mt-1">Real-time performance of sales based on your database.</p>
               </div>
-              
+
               <div className="w-full h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={stats.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#000000" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#000000" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#000000" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#000000" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
                     <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
                     <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{ backgroundColor: '#111827', borderRadius: '12px', color: '#fff', border: 'none' }}
                       itemStyle={{ color: '#fff' }}
                     />
-                    <Area 
-                      type="monotone" 
-                      dataKey="revenue" 
-                      stroke="#000000" 
-                      strokeWidth={3} 
-                      fillOpacity={1} 
-                      fill="url(#colorRevenue)" 
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="#000000"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorRevenue)"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
