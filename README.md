@@ -1,38 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aroyana Exclusives 💎
 
-## Getting Started
+[![Live Project](https://img.shields.io/badge/🚀-Live_Project-success?style=for-the-badge)](https://aroyana-exclusives.vercel.app)
+[![Frontend Repository](https://img.shields.io/badge/Frontend-Repository-blue?style=for-the-badge&logo=github)](https://github.com/afjalhossain31/Aroyana-Exclusives-Client)
+[![Backend Repository](https://img.shields.io/badge/Backend-Repository-black?style=for-the-badge&logo=github)](https://github.com/afjalhossain31/Aroyana-Exclusives-Server)
 
-First, run the development server:
+## 📖 About
+
+**Aroyana Exclusives** is a premium full-stack fashion e-commerce platform designed to deliver a modern shopping experience with elegant UI, smooth animations, secure authentication, and responsive design. Customers can browse products, explore collections, and enjoy a seamless shopping experience across all devices.
+
+---
+
+### 🔗 Live Project
+**https://aroyana-exclusives.vercel.app**
+
+---
+
+## ✨ Key Features
+
+- Premium and modern e-commerce UI
+- Fully responsive design for desktop, tablet, and mobile
+- Dynamic product listing and details
+- Category-based product browsing
+- Secure authentication and protected routes
+- Smooth animations with Framer Motion
+- Optimized API data fetching
+- Dark-themed luxury interface
+- Modern Hero, Testimonials, Categories, and CTA sections
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- Next.js (App Router)
+- React.js
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Remix Icons
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- JWT Authentication
+
+### Deployment
+- Vercel
+- Render
+
+---
+
+## 📂 Project Structure
+
+```text
+aroyana-exclusives/
+│── src/
+│   ├── app/
+│   ├── components/
+│   ├── lib/
+│   ├── services/
+│   ├── providers/
+│   ├── types/
+│   └── utils/
+
+aroyana-exclusives-server/
+│── src/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── config/
+│   ├── utils/
+│   └── server.js
+
+```
+
+## 🚀 Getting Started
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/afjalhossain31/Aroyana-Exclusives.git
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run the Frontend
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Run the Backend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd server
+npm install
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔑 Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend (.env.local)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backend (.env)
 
-## Deploy on Vercel
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_uri
+JWT_SECRET=your_secret_key
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
 
-
+This project is licensed under the **MIT License**.
